@@ -1,0 +1,10 @@
+*.csproj
+*.sln
+
+.vs
+Temp
+obj
+summary
+Assets/ML-Agents
+Library
+Assets/ML-Agents/Plugins
