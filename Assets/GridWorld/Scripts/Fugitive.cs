@@ -81,11 +81,25 @@ public class Fugitive : MonoBehaviour
             targetPos = transform.position + actionPos[i];
 
             Collider[] blockTest = Physics.OverlapBox(targetPos, new Vector3(0.3f, 0.3f, 0.3f));
-            if (blockTest.Where(col => col.gameObject.tag == "wall" || col.gameObject.tag == "pit"|| col.gameObject.tag == "agent").ToArray().Length == 0)
+
+            bool bCol = false;
+
+            foreach( var col in blockTest)
             {
-                moveAblePos.Add(targetPos);
+                if (col.tag == "wall"|| col.tag == "agent"|| col.tag == "plt")
+                {
+                    bCol = true;
+                    break;
+                }
             }
-           
+
+            if (bCol)
+                continue;
+
+
+            moveAblePos.Add(targetPos);
+
+
         }
 
 

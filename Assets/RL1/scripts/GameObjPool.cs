@@ -118,9 +118,31 @@ public class GameObjPool: Dictionary<string, Queue<GameObject> >
 
     public GameObject Alloc(string strName, MonoBehaviour monoObj,float lifeTime = 0f)
     {
+
         Queue<GameObject> list = null;
 
-        strName = Path.GetFileNameWithoutExtension(strName);
+        Object resObj = null;
+
+
+        if (strName == null)
+            return null;
+
+        strName = strName.ToLower();
+
+        if (strName.Contains("resources/")|| strName.Contains("resources\\"))
+        {
+            string temp= Path.GetFileNameWithoutExtension(strName);
+
+            if (!m_DicRes.TryGetValue(temp, out resObj) || resObj == null)
+            {
+                return Alloc(LoadResource(strName, 1), monoObj, lifeTime);
+            }
+            else
+                strName = temp;
+               
+        }
+        else
+          strName = Path.GetFileNameWithoutExtension(strName);
 
         GameObject obj;
 
@@ -148,9 +170,13 @@ public class GameObjPool: Dictionary<string, Queue<GameObject> >
         if(list==null)
              Add(strName, new Queue<GameObject>());
 
-        Object resObj = null;
-        if (!m_DicRes.TryGetValue(strName, out resObj)||resObj== null)
-            return null;
+      
+        if(resObj == null)
+        {
+            if (!m_DicRes.TryGetValue(strName, out resObj) || resObj == null)
+                return null;
+
+        }
 
         obj = (GameObject)GameObject.Instantiate(resObj);
         obj.name = strName;

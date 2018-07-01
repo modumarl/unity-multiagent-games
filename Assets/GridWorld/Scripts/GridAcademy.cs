@@ -77,7 +77,7 @@ public class GridAcademy : Academy
 
             if (pitNo == i)
             {
-                trueAgent[i].GetComponent<GridAgent>().SetPitMode(10);
+                trueAgent[i].GetComponent<GridAgent>().SetPitMode(6);
             }
 
 
@@ -245,7 +245,7 @@ public class GridAcademy : Academy
     public void WriteSummary(int step)
     {
 
-        return;
+        //return;
 
         if (csvWriter == null)
             return;

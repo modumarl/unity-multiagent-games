@@ -136,8 +136,13 @@ public class GridAgent : Agent
         AddVectorObs(academy.goalObject.transform.position.z);   ///10개
 
        
-        AddVectorObs(restObcCount);
-        AddVectorObs(maxObcCount);
+        if(maxObcCount>0)
+            AddVectorObs(restObcCount/ maxObcCount);
+        else
+            AddVectorObs(0);
+
+
+        AddVectorObs(0);
 
         AddVectorObs(0);            //13개
         AddVectorObs(0);            //14개
@@ -159,6 +164,10 @@ public class GridAgent : Agent
             if (AddObc(transform.position + actionPos[action - actionPos.Length]))
             {
                 actionSucc = 1;
+            }
+            else
+            {
+                AddReward(-0.003f);
             }
 
             
@@ -233,6 +242,10 @@ public class GridAgent : Agent
                 //AddReward(-0.02f);
 
             }
+            else if (blockTest.Where(col => col.gameObject.tag == "goal").ToArray().Length >= 1)
+            {
+                return;
+            }
             else
             {
 
@@ -263,10 +276,7 @@ public class GridAgent : Agent
             
             }
 
-            if (blockTest.Where(col => col.gameObject.tag == "goal").ToArray().Length >= 1)
-            {
-                return;
-            }
+
 /*
             if (blockTest.Where(col => col.gameObject.tag == "goal").ToArray().Length == 1)
             {
