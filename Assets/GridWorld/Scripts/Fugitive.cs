@@ -86,7 +86,7 @@ public class Fugitive : MonoBehaviour
 
             foreach( var col in blockTest)
             {
-                if (col.tag == "wall"|| col.tag == "agent"|| col.tag == "plt")
+                if (col.tag == "wall"|| col.tag == "agent"|| col.tag == "pit")
                 {
                     bCol = true;
                     break;

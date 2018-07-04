@@ -67,6 +67,8 @@ public class GridAcademy : Academy
 
         var brain = transform.Find("GridWorldBrain").GetComponent<Brain>();
         int pitNo = Random.Range(0, trueAgent.Length);
+
+       
         for (int i = 0; i < AgenCount; ++i)
         {
             trueAgent[i] = Instantiate(agentPref);
@@ -78,8 +80,8 @@ public class GridAcademy : Academy
             if (pitNo == i)
             {
                 trueAgent[i].GetComponent<GridAgent>().SetPitMode(6);
+                trueAgent[i].GetComponent<GridAgent>().SetSight(1);
             }
-
 
         }
 
@@ -307,9 +309,9 @@ public class GridAcademy : Academy
             float nextDist = Vector3.SqrMagnitude(o.transform.position - goalObject.transform.position);
 
             if (o.GetComponent<GridAgent>().maxObcCount>0)
-                o.GetComponent<GridAgent>().SetReward(blockCnt*0.3f);
+                o.GetComponent<GridAgent>().SetReward(4f+blockCnt*2f);
             else
-                o.GetComponent<GridAgent>().SetReward(1f);
+                o.GetComponent<GridAgent>().SetReward(5f);
            
         }
 

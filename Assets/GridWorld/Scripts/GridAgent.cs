@@ -49,20 +49,17 @@ public class GridAgent : Agent
 
         preRewordPos = transform.position;
 
-
         if(obc_res ==null)
         {
             obc_res = (GameObject)Resources.Load("pit_x");
         }
-
+  
         Init();
     }
 
     public void Init()
     {
         preRewordPos = transform.position;
-
-      
 
         foreach (var o in listObc)
         {
@@ -94,6 +91,11 @@ public class GridAgent : Agent
         restObcCount = nObcCount;
     }
 
+    public void SetSight(int Range)
+    {
+      
+    }
+
     public bool AddObc(Vector3 pos)
     {
         if (restObcCount < 1)
@@ -115,35 +117,52 @@ public class GridAgent : Agent
         AddVectorObs(gameObject.transform.position.z);
         AddVectorObs(actionSucc);
 
-        for(int i=0; i<5;++i)
+        for(int i=0; i<4;++i)
         {
             Vector3 targetPos = transform.position+ actionPos[i];
 
             Collider[] blockTest = Physics.OverlapBox(targetPos, new Vector3(0.3f, 0.3f, 0.3f));
 
-            if (blockTest.Where(col => col.gameObject.tag == "wall"
-            || col.gameObject.tag == "pit" || col.gameObject.tag == "agent").ToArray().Length > 0)
+            int coltype = 0;
+
+            foreach (var col in blockTest)
             {
-                AddVectorObs(0);
+                switch (col.tag)
+                {
+                    case "wall":
+                        coltype = 1;
+                        break;
+                    case "agent":
+                        coltype = 2;
+                        break;
+                    case "pit":
+                        coltype = 3;
+                        break;
+                    default:
+                        coltype = 0;
+                        break;
+                }
             }
-            else
-            {
-                AddVectorObs(1);
-            }
+            AddVectorObs(coltype);
         }
 
-        AddVectorObs(academy.goalObject.transform.position.x);
-        AddVectorObs(academy.goalObject.transform.position.z);   ///10개
 
-       
-        if(maxObcCount>0)
-            AddVectorObs(restObcCount/ maxObcCount);
+           
+        AddVectorObs(academy.goalObject.transform.position.x);
+        AddVectorObs(academy.goalObject.transform.position.z);   ///9개
+      
+     
+        //10개
+        if (maxObcCount>0)
+            AddVectorObs(restObcCount/ maxObcCount); 
         else
             AddVectorObs(0);
 
 
+     
         AddVectorObs(0);
 
+        AddVectorObs(0);
         AddVectorObs(0);            //13개
         AddVectorObs(0);            //14개
         AddVectorObs(0);            //15개
@@ -188,8 +207,6 @@ public class GridAgent : Agent
             return;
         }
 
-
-
         int moveable = 0;
 
         for (int i = 0; i < actionPos.Length; ++i)
@@ -203,7 +220,6 @@ public class GridAgent : Agent
             {
                 moveable += 1;
             }
-
         }
 
         if(moveable==0)
@@ -223,9 +239,6 @@ public class GridAgent : Agent
 
 
         Collider[] blockTest = Physics.OverlapBox(targetPos, new Vector3(0.3f, 0.3f, 0.3f));
-
-
-
 
         if (blockTest.Where(col => col.gameObject.tag == "wall").ToArray().Length == 0)
         {
@@ -253,15 +266,13 @@ public class GridAgent : Agent
 
                 float nextDist = Vector3.SqrMagnitude(targetPos - academy.goalObject.transform.position);
 
-                if (nextDist < preDist&&preRewordPos != targetPos&&this.restObcCount==0)
+                if (nextDist < preDist && preRewordPos != targetPos && this.restObcCount == 0)
                 {
-                    preRewordPos = targetPos;          
+                    preRewordPos = targetPos;
                     AddReward(0.005f);
                 }
-              
 
-
-                prePos =  transform.position;
+                prePos = transform.position;
                 transform.position = targetPos;
 
                 if (prePos == transform.position)
@@ -269,10 +280,7 @@ public class GridAgent : Agent
                     AddReward(-0.003f);
                 }
 
-
-
                 actionSucc = 1;
-
             
             }
 
